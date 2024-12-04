@@ -28,4 +28,4 @@ EXPOSE 8080
 # CMD ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8080"]
 
 # docker buildx build --platform linux/amd64 -t aris-url-gen-api:latest .
-# docker run -d -p 8170:8080 --env-file env/api.env --name aris-url-gen-api --network 1panel-network -t aris-url-gen-api:latest /app/aris-url-gen-api server start --host 0.0.0.0 --port 8080·
+# docker run -d -p 8170:8080 --env-file env/api.env --name aris-url-gen-api --network 1panel-network -t aris-url-gen-api:latest /app/aris-url-gen-api server start --host 0.0.0.0 --port 8080
