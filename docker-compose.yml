@@ -1,0 +1,80 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -u$$MYSQL_USER -p$$MYSQL_PASSWORD" ]
+      interval: 5s
+      retries: 10
+    env_file:
+      - ./env/mysql.env
+
+
+  redis:
+    image: bitnami/redis:latest
+    container_name: redis
+    restart: always
+    volumes:
+      - redis-data:/bitnami/redis/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    env_file:
+      - ./env/redis.env
+
+  db-migrate:
+    image: aris-url-gen:latest
+    container_name: db-migrate
+    build:
+      dockerfile: dockerfile
+    restart: "no"
+    env_file:
+      - ./env/api.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: ["/app/aris-url-gen-api", "database", "migrate"]
+
+  aris-url-gen-api:
+    image: aris-url-gen:latest
+    container_name: aris-url-gen-api
+    build:
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - 8170:8170
+    env_file:
+      - ./env/api.env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      db-migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://0.0.0.0:8170/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+    command: ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8170"]
+
+volumes:
+  mysql-data:
+    name: mysql-data
+    external: true
+  redis-data:
+    name: redis-data
+    external: true
+
+
+# docker volume create mysql-data 
+# docker volume create redis-data
+# docker compose -f debug-docker-compose.yml up -d
