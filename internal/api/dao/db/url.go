@@ -1,9 +1,9 @@
-package dao
+package dbdao
 
 import (
 	"time"
 
-	"github.com/hcd233/Aris-url-gen/internal/resource/database/model"
+	"github.com/hcd233/Aris-url-gen/internal/resource/db/model"
 	"gorm.io/gorm"
 )
 
@@ -25,21 +25,21 @@ type URLDAO struct {
 //	@return err error
 //	@author centonhuang
 //	@update 2024-10-17 05:08:00
-func (dao *URLDAO) GetByOriginalUrl(db *gorm.DB, originalUrl string, fields, preloads []string) (url *model.URL, err error) {
+func (dao *URLDAO) GetByOriginalURL(db *gorm.DB, originalURL string, fields, preloads []string) (url *model.URL, err error) {
 	sql := db.Select(fields)
 	for _, preload := range preloads {
 		sql = sql.Preload(preload)
 	}
-	err = sql.Where(model.URL{OriginalURL: originalUrl}).First(&url).Error
+	err = sql.Where(model.URL{OriginalURL: originalURL}).First(&url).Error
 	return
 }
 
-func (dao *URLDAO) GetByShortUrl(db *gorm.DB, shortUrl string, fields, preloads []string) (url *model.URL, err error) {
+func (dao *URLDAO) GetByShortURL(db *gorm.DB, shortURL string, fields, preloads []string) (url *model.URL, err error) {
 	sql := db.Select(fields)
 	for _, preload := range preloads {
 		sql = sql.Preload(preload)
 	}
-	err = sql.Where(model.URL{ShortURL: shortUrl}).First(&url).Error
+	err = sql.Where(model.URL{ShortURL: shortURL}).First(&url).Error
 	return
 }
 

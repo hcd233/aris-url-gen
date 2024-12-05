@@ -1,7 +1,4 @@
-// Package dao DAO
-//
-//	@update 2024-10-17 02:31:49
-package dao
+package dbdao
 
 import (
 	"time"
