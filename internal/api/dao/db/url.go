@@ -3,7 +3,7 @@ package dbdao
 import (
 	"time"
 
-	"github.com/hcd233/Aris-url-gen/internal/resource/db/model"
+	"github.com/hcd233/Aris-url-gen/internal/resource/database/model"
 	"gorm.io/gorm"
 )
 
@@ -50,4 +50,16 @@ func (dao *URLDAO) BatchGetExpiredURLs(db *gorm.DB, fields, preloads []string) (
 	}
 	err = sql.Where("expire_at < ?", time.Now()).Find(&urls).Error
 	return
+}
+
+// BatchGetHotURLs 批量获取热门URL
+func (dao *URLDAO) BatchGetHotURLs(db *gorm.DB, offset, limit int) ([]*model.URL, error) {
+	var urls []*model.URL
+	err := db.Model(&model.URL{}).
+		Where("expire_at > ? OR expire_at IS NULL", time.Now()).
+		Order("id DESC"). // 这里可以根据实际需求修改排序规则
+		Offset(offset).
+		Limit(limit).
+		Find(&urls).Error
+	return urls, err
 }
