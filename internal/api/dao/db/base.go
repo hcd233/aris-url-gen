@@ -56,6 +56,12 @@ func (dao *baseDAO[ModelT]) Delete(db *gorm.DB, data *ModelT) (err error) {
 	return
 }
 
+// BatchDelete 批量删除
+//
+//	@param dao *baseDAO[ModelT]
+//	@return BatchDelete
+//	@author centonhuang
+//	@update 2024-12-05 16:07:09
 func (dao *baseDAO[ModelT]) BatchDelete(db *gorm.DB, data *[]ModelT) (err error) {
 	err = db.Delete(&data).Error
 	return
@@ -106,7 +112,6 @@ func (dao *baseDAO[ModelT]) Paginate(db *gorm.DB, fields []string, preloads []st
 		sql = sql.Preload(preload)
 	}
 	err = sql.Limit(limit).Offset(offset).Find(&data).Error
-
 	if err != nil {
 		return
 	}

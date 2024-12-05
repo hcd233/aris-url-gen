@@ -9,6 +9,10 @@ import (
 	"gorm.io/gorm"
 )
 
+// URL URL数据库模型
+//
+//	@author centonhuang
+//	@update 2024-12-05 16:16:18
 type URL struct {
 	gorm.Model
 	ID          uint         `json:"id" gorm:"column:id;primary_key;auto_increment;comment:URL ID"`

@@ -18,8 +18,10 @@ var rootCmd = &cobra.Command{
 	Long:  `Aris Blog API`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// Execute 执行命令行
+//
+//	@author centonhuang
+//	@update 2024-12-05 16:05:32
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {

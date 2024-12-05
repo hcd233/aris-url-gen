@@ -11,16 +11,29 @@ import (
 	"gorm.io/gorm"
 )
 
+// Cron 定时任务接口
+//
+//	@author centonhuang
+//	@update 2024-12-05 16:14:29
 type Cron interface {
 	Start()
 }
 
+// CleanExpiredURLsCron 清理过期的URL
+//
+//	@author centonhuang
+//	@update 2024-12-05 16:14:35
 type CleanExpiredURLsCron struct {
 	cron   *cron.Cron
 	db     *gorm.DB
 	urlDAO *dbdao.URLDAO
 }
 
+// NewCleanExpiredURLsCron 创建清理过期的URL定时任务
+//
+//	@return Cron
+//	@author centonhuang
+//	@update 2024-12-05 16:14:39
 func NewCleanExpiredURLsCron() Cron {
 	return &CleanExpiredURLsCron{
 		cron: cron.New(
@@ -31,6 +44,11 @@ func NewCleanExpiredURLsCron() Cron {
 	}
 }
 
+// Start 启动定时任务
+//
+//	@receiver c *CleanExpiredURLsCron
+//	@author centonhuang
+//	@update 2024-12-05 16:14:45
 func (c *CleanExpiredURLsCron) Start() {
 	// debug set 10 seconds
 	// c.cron.AddFunc("@every 10s", c.cleanExpiredURLs)

@@ -34,6 +34,17 @@ func (dao *URLDAO) GetByOriginalURL(db *gorm.DB, originalURL string, fields, pre
 	return
 }
 
+// GetByShortURL 通过短URL获取URL
+//
+//	@receiver dao *URLDAO
+//	@param db *gorm.DB
+//	@param shortURL string
+//	@param fields []string
+//	@param preloads []string
+//	@return url *model.URL
+//	@return err error
+//	@author centonhuang
+//	@update 2024-12-05 16:07:38
 func (dao *URLDAO) GetByShortURL(db *gorm.DB, shortURL string, fields, preloads []string) (url *model.URL, err error) {
 	sql := db.Select(fields)
 	for _, preload := range preloads {
@@ -43,6 +54,16 @@ func (dao *URLDAO) GetByShortURL(db *gorm.DB, shortURL string, fields, preloads 
 	return
 }
 
+// BatchGetExpiredURLs 批量获取过期URL
+//
+//	@receiver dao *URLDAO
+//	@param db *gorm.DB
+//	@param fields []string
+//	@param preloads []string
+//	@return urls []*model.URL
+//	@return err error
+//	@author centonhuang
+//	@update 2024-12-05 16:07:46
 func (dao *URLDAO) BatchGetExpiredURLs(db *gorm.DB, fields, preloads []string) (urls []*model.URL, err error) {
 	sql := db.Select(fields)
 	for _, preload := range preloads {
@@ -53,6 +74,15 @@ func (dao *URLDAO) BatchGetExpiredURLs(db *gorm.DB, fields, preloads []string) (
 }
 
 // BatchGetHotURLs 批量获取热门URL
+//
+//	@receiver dao *URLDAO
+//	@param db *gorm.DB
+//	@param offset int
+//	@param limit int
+//	@return []*model.URL
+//	@return error
+//	@author centonhuang
+//	@update 2024-12-05 16:07:58
 func (dao *URLDAO) BatchGetHotURLs(db *gorm.DB, offset, limit int) ([]*model.URL, error) {
 	var urls []*model.URL
 	err := db.Model(&model.URL{}).

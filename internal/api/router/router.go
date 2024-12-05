@@ -6,6 +6,11 @@ import (
 	"github.com/hcd233/Aris-url-gen/internal/api/service"
 )
 
+// RegisterRouter 注册路由
+//
+//	@param app *fiber.App
+//	@author centonhuang
+//	@update 2024-12-05 16:13:09
 func RegisterRouter(app *fiber.App) {
 	healthCheckHandler := handler.NewHealthCheckHandler()
 	shortURLHandler := handler.NewShortURLHandler(handler.WithShortURLService(service.NewShortURLService()))

@@ -10,14 +10,31 @@ type shortURLHandler struct {
 	service service.ShortURLService
 }
 
+// ShortURLHandlerOption 短URL接口选项
+//
+//	@param handler *shortURLHandler
+//	@author centonhuang
+//	@update 2024-12-05 16:09:55
 type ShortURLHandlerOption func(handler *shortURLHandler)
 
+// WithShortURLService 设置短URL服务
+//
+//	@param service service.ShortURLService
+//	@return ShortURLHandlerOption
+//	@author centonhuang
+//	@update 2024-12-05 16:09:59
 func WithShortURLService(service service.ShortURLService) ShortURLHandlerOption {
 	return func(handler *shortURLHandler) {
 		handler.service = service
 	}
 }
 
+// NewShortURLHandler 创建短URL接口
+//
+//	@param handlerOptions ...ShortURLHandlerOption
+//	@return ShortURLHandler
+//	@author centonhuang
+//	@update 2024-12-05 16:12:10
 func NewShortURLHandler(handlerOptions ...ShortURLHandlerOption) ShortURLHandler {
 	handler := &shortURLHandler{}
 	for _, option := range handlerOptions {
@@ -26,6 +43,13 @@ func NewShortURLHandler(handlerOptions ...ShortURLHandlerOption) ShortURLHandler
 	return handler
 }
 
+// GenerateShortURL 生成短URL
+//
+//	@receiver h *shortURLHandler
+//	@param ctx *fiber.Ctx
+//	@return error
+//	@author centonhuang
+//	@update 2024-12-05 16:12:27
 func (h *shortURLHandler) GenerateShortURL(ctx *fiber.Ctx) error {
 	request := new(dto.GenerateShortURLRequest)
 	if err := ctx.BodyParser(request); err != nil {
@@ -52,6 +76,13 @@ func (h *shortURLHandler) GenerateShortURL(ctx *fiber.Ctx) error {
 	})
 }
 
+// GetOriginalURL 获取原始URL
+//
+//	@receiver h *shortURLHandler
+//	@param ctx *fiber.Ctx
+//	@return error
+//	@author centonhuang
+//	@update 2024-12-05 16:12:37
 func (h *shortURLHandler) GetOriginalURL(ctx *fiber.Ctx) error {
 	request := new(dto.GetOriginalURLRequest)
 	if err := ctx.ParamsParser(request); err != nil {

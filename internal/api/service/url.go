@@ -38,6 +38,11 @@ type shortURLService struct {
 	urlCacheDAO cachedao.URLCacheDAO
 }
 
+// NewShortURLService 创建短URL服务
+//
+//	@return ShortURLService
+//	@author centonhuang
+//	@update 2024-12-05 16:13:36
 func NewShortURLService() ShortURLService {
 	return &shortURLService{
 		db:          database.GetDBInstance(),
@@ -46,6 +51,14 @@ func NewShortURLService() ShortURLService {
 	}
 }
 
+// GenerateShortURL 生成短URL
+//
+//	@receiver s *shortURLService
+//	@param request *dto.GenerateShortURLRequest
+//	@return response *dto.GenerateShortURLResponse
+//	@return err error
+//	@author centonhuang
+//	@update 2024-12-05 16:13:40
 func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest) (response *dto.GenerateShortURLResponse, err error) {
 	// 先查询缓存
 	ctx := context.Background()
@@ -120,6 +133,14 @@ func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest)
 	}, nil
 }
 
+// GetOriginalURL 获取原始URL
+//
+//	@receiver s *shortURLService
+//	@param request *dto.GetOriginalURLRequest
+//	@return response *dto.GetOriginalURLResponse
+//	@return err error
+//	@author centonhuang
+//	@update 2024-12-05 16:13:53
 func (s *shortURLService) GetOriginalURL(request *dto.GetOriginalURLRequest) (response *dto.GetOriginalURLResponse, err error) {
 	ctx := context.Background()
 

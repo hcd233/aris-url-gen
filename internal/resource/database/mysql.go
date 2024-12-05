@@ -14,9 +14,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// DB undefined mysql数据库连接
-//
-//	@update 2024-09-16 01:24:51
 var db *gorm.DB
 
 // GetDBInstance 获取数据库实例

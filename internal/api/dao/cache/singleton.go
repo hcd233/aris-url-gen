@@ -12,6 +12,11 @@ var (
 	urlOnce sync.Once
 )
 
+// GetURLCacheDAO 获取URL缓存DAO
+//
+//	@return *urlCacheDAO
+//	@author centonhuang
+//	@update 2024-12-05 16:06:05
 func GetURLCacheDAO() *urlCacheDAO {
 	urlOnce.Do(func() {
 		urlCacheDAOSingleton = &urlCacheDAO{
