@@ -1,9 +1,9 @@
 package cron
 
 import (
+	dbdao "github.com/hcd233/Aris-url-gen/internal/api/dao/db"
 	"github.com/hcd233/Aris-url-gen/internal/logger"
 	"github.com/hcd233/Aris-url-gen/internal/resource/database"
-	"github.com/hcd233/Aris-url-gen/internal/resource/database/dao"
 	"github.com/hcd233/Aris-url-gen/internal/resource/database/model"
 	"github.com/robfig/cron/v3"
 	"github.com/samber/lo"
@@ -18,7 +18,7 @@ type Cron interface {
 type CleanExpiredURLsCron struct {
 	cron   *cron.Cron
 	db     *gorm.DB
-	urlDAO *dao.URLDAO
+	urlDAO *dbdao.URLDAO
 }
 
 func NewCleanExpiredURLsCron() Cron {
@@ -27,7 +27,7 @@ func NewCleanExpiredURLsCron() Cron {
 			cron.WithLogger(newCronLoggerAdapter("CleanExpiredURLsCron", logger.Logger)),
 		),
 		db:     database.GetDBInstance(),
-		urlDAO: dao.GetURLDAO(),
+		urlDAO: dbdao.GetURLDAO(),
 	}
 }
 
