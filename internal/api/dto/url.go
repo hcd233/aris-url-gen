@@ -1,6 +1,6 @@
 package dto
 
-type GenerateShortUrlRequest struct {
+type GenerateShortURLRequest struct {
 	OriginalURL string `json:"originalURL" validate:"required,min=5,max=512"`
 	ExpireDays  int8   `json:"expireDays" validate:"omitempty,min=1"`
 }
@@ -9,7 +9,7 @@ type GenerateShortURLResponse struct {
 	ShortURL string `json:"shortURL"`
 }
 
-type GetOriginalUrlRequest struct {
+type GetOriginalURLRequest struct {
 	ShortURL string `json:"shortURL" validate:"required,min=5,max=10"`
 }
 

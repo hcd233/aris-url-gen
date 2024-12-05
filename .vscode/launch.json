@@ -18,7 +18,7 @@
             ],
         },
         {
-            "name": "Aris-Blog-Migrate",
+            "name": "Aris-URL-Gen-Migrate",
             "type": "go",
             "request": "launch",
             "mode": "auto",

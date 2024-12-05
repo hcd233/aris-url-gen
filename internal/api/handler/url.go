@@ -6,28 +6,28 @@ import (
 	"github.com/hcd233/Aris-url-gen/internal/api/service"
 )
 
-type shortenUrlHandler struct {
+type shortURLHandler struct {
 	service service.ShortURLService
 }
 
-type ShortURLHandlerOption func(handler *shortenUrlHandler)
+type ShortURLHandlerOption func(handler *shortURLHandler)
 
 func WithShortURLService(service service.ShortURLService) ShortURLHandlerOption {
-	return func(handler *shortenUrlHandler) {
+	return func(handler *shortURLHandler) {
 		handler.service = service
 	}
 }
 
 func NewShortURLHandler(handlerOptions ...ShortURLHandlerOption) ShortURLHandler {
-	handler := &shortenUrlHandler{}
+	handler := &shortURLHandler{}
 	for _, option := range handlerOptions {
 		option(handler)
 	}
 	return handler
 }
 
-func (h *shortenUrlHandler) GenerateShortURL(ctx *fiber.Ctx) error {
-	request := new(dto.GenerateShortUrlRequest)
+func (h *shortURLHandler) GenerateShortURL(ctx *fiber.Ctx) error {
+	request := new(dto.GenerateShortURLRequest)
 	if err := ctx.BodyParser(request); err != nil {
 		code := dto.CodeInvalidRequest
 		return ctx.Status(fiber.StatusBadRequest).JSON(dto.StandardResponse{
@@ -52,8 +52,8 @@ func (h *shortenUrlHandler) GenerateShortURL(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h *shortenUrlHandler) GetOriginalURL(ctx *fiber.Ctx) error {
-	request := new(dto.GetOriginalUrlRequest)
+func (h *shortURLHandler) GetOriginalURL(ctx *fiber.Ctx) error {
+	request := new(dto.GetOriginalURLRequest)
 	if err := ctx.ParamsParser(request); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}

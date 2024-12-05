@@ -1,7 +1,7 @@
 // Package database 存储中间件
 //
 //	@update 2024-06-22 09:04:46
-package database
+package db
 
 import (
 	"fmt"

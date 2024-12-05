@@ -8,7 +8,7 @@ import (
 
 func RegisterRouter(app *fiber.App) {
 	healthCheckHandler := handler.NewHealthCheckHandler()
-	shortenUrlHandler := handler.NewShortURLHandler(handler.WithShortURLService(service.NewShortenUrlService()))
+	shortURLHandler := handler.NewShortURLHandler(handler.WithShortURLService(service.NewShortURLService()))
 
 	healthRouter := app.Group("/health")
 	healthRouter.Get("", healthCheckHandler.HealthCheck)
@@ -16,6 +16,6 @@ func RegisterRouter(app *fiber.App) {
 	v1Router := app.Group("/v1")
 	shortURLRouter := v1Router.Group("/shortURL")
 
-	shortURLRouter.Post("", shortenUrlHandler.GenerateShortURL)
-	shortURLRouter.Get("/:shortURL", shortenUrlHandler.GetOriginalURL)
+	shortURLRouter.Post("", shortURLHandler.GenerateShortURL)
+	shortURLRouter.Get("/:shortURL", shortURLHandler.GetOriginalURL)
 }
