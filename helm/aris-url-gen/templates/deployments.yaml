@@ -1,0 +1,129 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: {{ .Values.mysql.image }}
+          ports:
+            - containerPort: {{ .Values.mysql.config.port }}
+          envFrom:
+            - configMapRef:
+                name: mysql-config
+            - secretRef:
+                name: mysql-secrets
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+                - -u$MYSQL_USER
+                - -p$MYSQL_PASSWORD
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: {{ .Values.redis.image }}
+          ports:
+            - containerPort: 6379
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - secretRef:
+                name: redis-secrets
+          volumeMounts:
+            - name: redis-data
+              mountPath: /bitnami/redis/data
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aris-url-gen-api
+  namespace: {{ .Values.global.namespace }}
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: aris-url-gen-api
+  template:
+    metadata:
+      labels:
+        app: aris-url-gen-api
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: ["sh", "-c", "until nc -z mysql {{ .Values.mysql.config.port }}; do echo waiting for mysql; sleep 1; done"]
+        - name: wait-for-redis
+          image: busybox
+          command: ["sh", "-c", "until nc -z redis 6379; do echo waiting for redis; sleep 1; done"]
+        - name: db-migrate
+          image: {{ .Values.api.image }}
+          command: ["/app/aris-url-gen-api", "database", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secrets
+      containers:
+        - name: api
+          image: {{ .Values.api.image }}
+          ports:
+            - containerPort: {{ .Values.api.service.targetPort }}
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secrets
+          command: ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "{{ .Values.api.service.targetPort }}"]
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.api.service.targetPort }}
+            initialDelaySeconds: 30
+            periodSeconds: 10 

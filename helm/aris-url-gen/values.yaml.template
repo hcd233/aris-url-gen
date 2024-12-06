@@ -1,0 +1,50 @@
+global:
+  namespace: aris-url-gen
+
+mysql:
+  image: mysql:latest
+  persistence:
+    size: 5Gi
+  config:
+    database: aris
+    port: 3306
+  secrets:
+    user: eHh4
+    password: eHh4==
+    rootPassword: eHh4
+
+redis:
+  image: bitnami/redis:latest
+  persistence:
+    size: 5Gi
+  config:
+    saveFrequency:
+      - "900:1"
+      - "300:10"
+      - "60:10000"
+    aof:
+      enabled: "yes"
+      fsync: "everysec"
+    appendonly: "yes"
+    appendfsync: "everysec"
+  secrets:
+    password: eHh4
+
+api:
+  image: ghcr.io/hcd233/aris-url-gen:master
+  service:
+    type: LoadBalancer
+    port: 8170
+    targetPort: 8170
+  config:
+    readTimeout: "60"
+    writeTimeout: "60"
+    maxHeaderBytes: "1048576"
+    concurrency: "16384"
+    domainName: "0.0.0.0:8170"
+    logLevel: "INFO"
+    logDir: "./logs"
+  secrets:
+    mysqlUser: eHh4
+    mysqlPassword: eHh4
+    redisPassword: eHh4

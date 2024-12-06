@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  MYSQL_DATABASE: {{ .Values.mysql.config.database | quote }}
+  MYSQL_PORT: {{ .Values.mysql.config.port | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  REDIS_SAVE_FREQUENCY: {{ index .Values.redis.config.saveFrequency 0 | quote }}
+  REDIS_SAVE_FREQUENCY_2: {{ index .Values.redis.config.saveFrequency 1 | quote }}
+  REDIS_SAVE_FREQUENCY_3: {{ index .Values.redis.config.saveFrequency 2 | quote }}
+  REDIS_AOF_ENABLED: {{ .Values.redis.config.aof.enabled | quote }}
+  REDIS_AOF_FSYNC: {{ .Values.redis.config.aof.fsync | quote }}
+  REDIS_APPENDONLY: {{ .Values.redis.config.appendonly | quote }}
+  REDIS_APPENDFSYNC: {{ .Values.redis.config.appendfsync | quote }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  READ_TIMEOUT: {{ .Values.api.config.readTimeout | quote }}
+  WRITE_TIMEOUT: {{ .Values.api.config.writeTimeout | quote }}
+  MAX_HEADER_BYTES: {{ .Values.api.config.maxHeaderBytes | quote }}
+  CONCURRENCY: {{ .Values.api.config.concurrency | quote }}
+  DOMAIN_NAME: {{ .Values.api.config.domainName | quote }}
+  LOG_LEVEL: {{ .Values.api.config.logLevel | quote }}
+  LOG_DIR: {{ .Values.api.config.logDir | quote }}
+  MYSQL_HOST: "mysql"
+  MYSQL_PORT: {{ .Values.mysql.config.port | quote }}
+  MYSQL_DATABASE: {{ .Values.mysql.config.database | quote }}
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379" 
