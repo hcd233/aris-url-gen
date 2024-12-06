@@ -1,3 +1,6 @@
+// Package dto 数据传输对象
+//
+//	@update 2024-12-06 19:57:57
 package dto
 
 import (
@@ -5,21 +8,30 @@ import (
 	"strings"
 )
 
+// Code 错误码
+//
+//	@author centonhuang
+//	@update 2024-12-06 19:57:39
 type Code int
 
 const (
-
+	// CodeUnauthorized Code 未认证
+	CodeUnauthorized Code = -1001
+	// CodeForbidden Code 禁止访问
+	CodeForbidden Code = -1002
 	// CodeOK Code 请求成功
-	CodeOK Code = iota
+	CodeOK Code = 0
 	// CodeInvalidRequest Code 请求参数错误
-	CodeInvalidRequest
+	CodeInvalidRequest Code = 1001
 	// CodeGenerateShortURLFailed Code 生成短链接失败
-	CodeGenerateShortURLFailed
+	CodeGenerateShortURLFailed Code = 1002
 	// CodeGetOriginalURLFailed Code 获取原始链接失败
-	CodeGetOriginalURLFailed
+	CodeGetOriginalURLFailed Code = 1003
 )
 
 var codeMessageMap = map[Code]string{
+	CodeUnauthorized:           "未认证",
+	CodeForbidden:              "禁止访问",
 	CodeOK:                     "请求成功",
 	CodeInvalidRequest:         "请求参数错误",
 	CodeGenerateShortURLFailed: "生成短链接失败",
@@ -38,7 +50,12 @@ func (c Code) ToMessage(additionalMessage ...string) string {
 	if !ok {
 		message = "未知错误"
 	}
-	return fmt.Sprintf("%s: %s", message, strings.Join(additionalMessage, " "))
+
+	if len(additionalMessage) > 0 {
+		return fmt.Sprintf("%s: %s", message, strings.Join(additionalMessage, " "))
+	}
+
+	return message
 }
 
 // StandardResponse 标准响应

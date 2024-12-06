@@ -66,6 +66,9 @@ var (
 
 	// RedisPassword string Redis密码
 	RedisPassword string
+
+	// AuthKey string 认证密钥
+	AuthKey string
 )
 
 func init() {
@@ -89,9 +92,13 @@ func initEnvironment() {
 	WriteTimeout = time.Duration(config.GetInt("write.timeout")) * time.Second
 	MaxHeaderBytes = config.GetInt("max.header.bytes")
 	Concurrency = config.GetInt("concurrency")
+
 	LogLevel = config.GetString("log.level")
 	LogDirPath = config.GetString("log.dir")
+
+	AuthKey = config.GetString("auth.key")
 	DomainName = config.GetString("domain.name")
+
 	MysqlUser = config.GetString("mysql.user")
 	MysqlPassword = config.GetString("mysql.password")
 	MysqlHost = config.GetString("mysql.host")

@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/hcd233/Aris-url-gen/internal/api/handler"
+	auth "github.com/hcd233/Aris-url-gen/internal/api/middleware"
 	"github.com/hcd233/Aris-url-gen/internal/api/service"
 )
 
@@ -19,6 +20,6 @@ func RegisterRouter(app *fiber.App) {
 	healthRouter.Get("", healthCheckHandler.HealthCheck)
 
 	v1Router := app.Group("/v1")
-	v1Router.Post("/shortURL", shortURLHandler.GenerateShortURL)
+	v1Router.Post("/shortURL", auth.New(), shortURLHandler.GenerateShortURL)
 	v1Router.Get("/s/:shortURL", shortURLHandler.GetOriginalURL)
 }
