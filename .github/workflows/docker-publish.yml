@@ -22,15 +22,13 @@ jobs:
         platform:
           - linux/amd64
           - linux/arm64
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      # - name: Prepare
-      #   run: |
-      #     platform=${{ matrix.platform }}
-      #     echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-      #     echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Prepare Docker File
         run: cp docker/dockerfile dockerfile
