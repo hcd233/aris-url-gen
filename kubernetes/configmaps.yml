@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: aris-url-gen
+data:
+  MYSQL_USER: "aris"
+  MYSQL_DATABASE: "aris"
+  MYSQL_PORT: "3306"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config
+  namespace: aris-url-gen
+data:
+  REDIS_SAVE_FREQUENCY: "900:1"
+  REDIS_SAVE_FREQUENCY_2: "300:10"
+  REDIS_SAVE_FREQUENCY_3: "60:10000"
+  REDIS_AOF_ENABLED: "yes"
+  REDIS_AOF_FSYNC: "everysec"
+  REDIS_APPENDONLY: "yes"
+  REDIS_APPENDFSYNC: "everysec"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: aris-url-gen
+data:
+  READ_TIMEOUT: "60"
+  WRITE_TIMEOUT: "60"
+  MAX_HEADER_BYTES: "1048576"
+  CONCURRENCY: "16384"
+  DOMAIN_NAME: "0.0.0.0:8170"
+  LOG_LEVLE: "INFO"
+  LOG_DIR: "./logs"
+  MYSQL_HOST: "mysql"
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: "aris"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379" 

@@ -1,0 +1,173 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: aris-url-gen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapRef:
+                name: mysql-config
+            - secretRef:
+                name: mysql-secrets
+          volumeMounts:
+            - name: mysql-storage
+              mountPath: /var/lib/mysql
+          livenessProbe:
+            exec:
+              command: ["mysqladmin", "ping", "-h", "localhost", "-u$(MYSQL_USER)", "-p$(MYSQL_PASSWORD)"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: mysql-storage
+          persistentVolumeClaim:
+            claimName: mysql-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: aris-url-gen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: bitnami/redis:latest
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "256Mi"
+          ports:
+            - containerPort: 6379
+          envFrom:
+            - configMapRef:
+                name: redis-config
+            - secretRef:
+                name: redis-secrets
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /bitnami/redis/data
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aris-url-gen-api
+  namespace: aris-url-gen
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: aris-url-gen-api
+  template:
+    metadata:
+      labels:
+        app: aris-url-gen-api
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "64Mi"
+            requests:
+              cpu: "0.05"
+              memory: "32Mi"
+          command: ['sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;']
+        - name: wait-for-redis
+          image: busybox
+          resources:
+            limits:
+              cpu: "0.1"
+              memory: "64Mi"
+            requests:
+              cpu: "0.05"
+              memory: "32Mi"
+          command: ['sh', '-c', 'until nc -z redis 6379; do echo waiting for redis; sleep 2; done;']
+        - name: db-migrate
+          image: ghcr.io/hcd233/aris-url-gen:master
+          resources:
+            limits:
+              cpu: "0.2"
+              memory: "256Mi"
+            requests:
+              cpu: "0.1"
+              memory: "128Mi"
+          command: ["/app/aris-url-gen-api", "database", "migrate"]
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secrets
+      containers:
+        - name: aris-url-gen-api
+          image: ghcr.io/hcd233/aris-url-gen:master
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+          ports:
+            - containerPort: 8170
+          command: ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8170"]
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secrets
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8170
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8170
+            initialDelaySeconds: 5
+            periodSeconds: 5 
