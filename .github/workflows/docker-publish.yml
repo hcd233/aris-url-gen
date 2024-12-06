@@ -1,4 +1,4 @@
-name: Docker-Publish-Amd64
+name: Docker-Publish
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -21,6 +21,14 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
+matrix:
+  include:
+    - name: amd64
+      runs-on: ubuntu-latest
+      platforms: linux/amd64
+    - name: arm64
+      runs-on: ubuntu-latest
+      platforms: linux/arm64
 
 jobs:
   build:
@@ -36,9 +44,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Prepare Docker File
-        run: cp docker/dockerfile dockerfile
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -78,7 +83,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: .
+          context: docker
+          platforms: ${{ matrix.platforms }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
