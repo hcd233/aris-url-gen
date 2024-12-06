@@ -102,6 +102,77 @@ go mod download
 go run main.go
 ```
 
+## 部署方式
+
+### Docker 部署
+
+1. 创建必要的数据卷:
+
+```bash
+docker volume create mysql-data
+docker volume create redis-data
+```
+
+2. 使用 docker-compose 部署:
+
+```bash
+# 开发环境部署
+docker compose -f docker/debug-docker-compose.yml up -d
+
+# 生产环境部署
+docker compose -f docker/docker-compose.yml up -d
+```
+
+### Kubernetes 部署
+
+1. 创建命名空间和配置:
+
+```bash
+kubectl apply -f kubernetes/namespace.yml
+kubectl apply -f kubernetes/configmaps.yml
+```
+
+2. 创建 secrets (需要先配置 secrets.yml):
+
+```bash
+cp kubernetes/secrets.yml.template kubernetes/secrets.yml
+# 编辑 secrets.yml 填入实际的密钥值
+kubectl apply -f kubernetes/secrets.yml
+```
+
+3. 创建存储和部署服务:
+
+```bash
+kubectl apply -f kubernetes/pvc.yml
+kubectl apply -f kubernetes/deployments.yml
+kubectl apply -f kubernetes/services.yml
+```
+
+### Helm 部署
+
+1. 配置 values.yaml:
+
+```bash
+cp helm/aris-url-gen/values.yaml.template helm/aris-url-gen/values.yaml
+# 编辑 values.yaml 填入实际的配置值
+```
+
+2. 使用 Helm 安装:
+
+```bash
+helm install aris-url-gen helm/aris-url-gen
+```
+
+3. 升级或卸载:
+
+```bash
+# 升级
+helm upgrade aris-url-gen helm/aris-url-gen
+
+# 卸载
+helm uninstall aris-url-gen
+```
+
 ## 许可证
 
 本项目采用 Apache License 2.0 许可证。详见 [LICENSE](LICENSE) 文件。

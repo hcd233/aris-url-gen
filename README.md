@@ -99,6 +99,77 @@ Refer to `api.env.template` to set up the required environment variables
 go run main.go
 ```
 
+## Deployment
+
+### Docker Deployment
+
+1. Create required volumes:
+
+```bash
+docker volume create mysql-data
+docker volume create redis-data
+```
+
+2. Deploy with docker-compose:
+
+```bash
+# Development environment
+docker compose -f docker/debug-docker-compose.yml up -d
+
+# Production environment
+docker compose -f docker/docker-compose.yml up -d
+```
+
+### Kubernetes Deployment
+
+1. Create namespace and configs:
+
+```bash
+kubectl apply -f kubernetes/namespace.yml
+kubectl apply -f kubernetes/configmaps.yml
+```
+
+2. Create secrets (configure secrets.yml first):
+
+```bash
+cp kubernetes/secrets.yml.template kubernetes/secrets.yml
+# Edit secrets.yml with actual secret values
+kubectl apply -f kubernetes/secrets.yml
+```
+
+3. Create storage and deploy services:
+
+```bash
+kubectl apply -f kubernetes/pvc.yml
+kubectl apply -f kubernetes/deployments.yml
+kubectl apply -f kubernetes/services.yml
+```
+
+### Helm Deployment
+
+1. Configure values.yaml:
+
+```bash
+cp helm/aris-url-gen/values.yaml.template helm/aris-url-gen/values.yaml
+# Edit values.yaml with your configuration
+```
+
+2. Install with Helm:
+
+```bash
+helm install aris-url-gen helm/aris-url-gen
+```
+
+3. Upgrade or uninstall:
+
+```bash
+# Upgrade
+helm upgrade aris-url-gen helm/aris-url-gen
+
+# Uninstall
+helm uninstall aris-url-gen
+```
+
 ## License
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for more details.
