@@ -45,7 +45,7 @@ Content-Type: application/json
 ### 2. Access Short URL
 
 ```http
-GET /v1/shortURL/{shortURL}
+GET /v1/s/{shortURL}
 ```
 
 ## Project Structure

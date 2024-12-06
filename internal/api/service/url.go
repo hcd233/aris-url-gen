@@ -68,7 +68,7 @@ func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest)
 	shortURL, err := s.urlCacheDAO.GetURLByOriginal(ctx, originalURL)
 	if shortURL != "" && err == nil {
 		return &dto.GenerateShortURLResponse{
-			ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/shortURL", shortURL),
+			ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/s", shortURL),
 		}, nil
 	}
 
@@ -83,7 +83,7 @@ func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest)
 		}
 		logger.Logger.Info("[Cache] short url already exists", zap.String("short_url", url.ShortURL))
 		return &dto.GenerateShortURLResponse{
-			ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/shortURL", url.ShortURL),
+			ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/s", url.ShortURL),
 		}, nil
 	}
 
@@ -129,7 +129,7 @@ func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest)
 	}
 
 	return &dto.GenerateShortURLResponse{
-		ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/shortURL", shortURLSuffix),
+		ShortURL: util.ConstructFullShortURL(config.DomainName, "v1/s", shortURLSuffix),
 	}, nil
 }
 

@@ -48,7 +48,7 @@ Content-Type: application/json
 ### 2. 访问短链接
 
 ```http
-GET /v1/shortURL/{shortURL}
+GET /v1/s/{shortURL}
 ```
 
 ## 项目结构

@@ -45,4 +45,4 @@ volumes:
 
 # docker volume create mysql-data 
 # docker volume create redis-data
-# docker compose -f debug-docker-compose.yml up -d
+# docker compose -f docker/debug-docker-compose.yml up -d

@@ -19,8 +19,6 @@ func RegisterRouter(app *fiber.App) {
 	healthRouter.Get("", healthCheckHandler.HealthCheck)
 
 	v1Router := app.Group("/v1")
-	shortURLRouter := v1Router.Group("/shortURL")
-
-	shortURLRouter.Post("", shortURLHandler.GenerateShortURL)
-	shortURLRouter.Get("/:shortURL", shortURLHandler.GetOriginalURL)
+	v1Router.Post("/shortURL", shortURLHandler.GenerateShortURL)
+	v1Router.Get("/s/:shortURL", shortURLHandler.GetOriginalURL)
 }
