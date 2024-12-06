@@ -8,10 +8,25 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Mode 模式
+//
+//	@author centonhuang
+//	@update 2024-12-07 01:15:34
+type Mode string
+
+const (
+	// ModeDev Mode 开发模式
+	//	@update 2024-12-07 01:15:23
+	ModeDev Mode = "dev"
+	// ModeProd Mode 生产模式
+	//	@update 2024-12-07 01:15:23
+	ModeProd Mode = "prod"
+)
+
 var (
 
 	// ReadTimeout time Gin读取超时时间
-	//	@update 2024-06-22 08:59:40
+	//	@update 2024-12-07 01:13:54
 	ReadTimeout time.Duration
 
 	// WriteTimeout time Gin写入超时时间
@@ -59,16 +74,23 @@ var (
 	MysqlDatabase string
 
 	// RedisHost string Redis主机
+	//	@update 2024-12-07 01:14:00
 	RedisHost string
 
 	// RedisPort string Redis端口
+	//	@update 2024-12-07 01:13:59
 	RedisPort string
 
 	// RedisPassword string Redis密码
+	//	@update 2024-12-07 01:13:57
 	RedisPassword string
 
 	// AuthKey string 认证密钥
 	AuthKey string
+
+	// APIMode string 模式
+	//	@update 2024-12-07 01:14:02
+	APIMode Mode
 )
 
 func init() {
@@ -98,7 +120,7 @@ func initEnvironment() {
 
 	AuthKey = config.GetString("auth.key")
 	DomainName = config.GetString("domain.name")
-
+	APIMode = Mode(config.GetString("api.mode"))
 	MysqlUser = config.GetString("mysql.user")
 	MysqlPassword = config.GetString("mysql.password")
 	MysqlHost = config.GetString("mysql.host")

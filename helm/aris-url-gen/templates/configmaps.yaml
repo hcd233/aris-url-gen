@@ -32,6 +32,7 @@ data:
   MAX_HEADER_BYTES: {{ .Values.api.config.maxHeaderBytes | quote }}
   CONCURRENCY: {{ .Values.api.config.concurrency | quote }}
   DOMAIN_NAME: {{ .Values.api.config.domainName | quote }}
+  API_MODE: {{ .Values.api.config.apiMode | "prod" }}
   LOG_LEVEL: {{ .Values.api.config.logLevel | quote }}
   LOG_DIR: {{ .Values.api.config.logDir | quote }}
   MYSQL_HOST: "mysql"

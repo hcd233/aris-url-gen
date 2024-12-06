@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/hcd233/Aris-url-gen/internal/config"
 )
 
 // GenerateRandomCode 生成随机码
@@ -42,7 +44,13 @@ func GenerateRandomCode(originalURL string, length int) (randomCode string) {
 //	@author centonhuang
 //	@update 2024-12-05 16:16:51
 func ConstructFullShortURL(domainName string, path string, randomCode string) (fullShortURL string) {
-	fullShortURL = fmt.Sprintf("http://%s/%s/%s", domainName, path, randomCode)
+	var scheme string
+	if config.APIMode == config.ModeProd {
+		scheme = "https"
+	} else {
+		scheme = "http"
+	}
+	fullShortURL = fmt.Sprintf("%s://%s/%s/%s", scheme, domainName, path, randomCode)
 	return
 }
 

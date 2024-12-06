@@ -39,7 +39,7 @@ var startServerCmd = &cobra.Command{
 			ReadTimeout:       config.ReadTimeout,
 			WriteTimeout:      config.WriteTimeout,
 			Concurrency:       config.Concurrency,
-			EnablePrintRoutes: true,
+			EnablePrintRoutes: config.APIMode == config.ModeDev,
 		})
 
 		app.Use(
