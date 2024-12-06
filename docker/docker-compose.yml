@@ -32,8 +32,6 @@ services:
   db-migrate:
     image: ghcr.io/hcd233/aris-url-gen:master
     container_name: db-migrate
-    build:
-      dockerfile: dockerfile
     restart: "no"
     env_file:
       - ../env/api.env
