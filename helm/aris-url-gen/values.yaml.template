@@ -48,3 +48,4 @@ api:
     mysqlUser: eHh4
     mysqlPassword: eHh4
     redisPassword: eHh4
+    authKey: YWsteHh4
