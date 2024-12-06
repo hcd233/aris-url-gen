@@ -25,11 +25,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare
-        run: |
-          platform=${{ matrix.platform }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-          echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      # - name: Prepare
+      #   run: |
+      #     platform=${{ matrix.platform }}
+      #     echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+      #     echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Prepare Docker File
         run: cp docker/dockerfile dockerfile
@@ -66,7 +66,11 @@ jobs:
         with:
           context: .
           platforms: ${{ matrix.platform }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
@@ -89,11 +93,11 @@ jobs:
       - build
     if: github.event_name != 'pull_request'
     steps:
-      - name: Prepare
-        run: |
-            platform=${{ matrix.platform }}
-            echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
-            echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      # - name: Prepare
+      #   run: |
+      #       platform=${{ matrix.platform }}
+      #       echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
+      #       echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Download digests
         uses: actions/download-artifact@v4
