@@ -21,19 +21,17 @@ env:
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
 
-matrix:
-  include:
-    - name: amd64
-      runs-on: ubuntu-latest
-      platforms: linux/amd64
-    - name: arm64
-      runs-on: ubuntu-latest
-      platforms: linux/arm64
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: amd64
+            platforms: linux/amd64
+          - name: arm64
+            platforms: linux/arm64
+
     permissions:
       contents: read
       packages: write
