@@ -8,11 +8,11 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 COPY vendor ./vendor
+COPY cmd ./cmd
+COPY internal ./internal
+COPY main.go ./main.go
 
 RUN go mod tidy
-
-COPY . .
-
 RUN go build -mod=vendor -o /go/bin/aris-url-gen-api
 
 FROM alpine:latest
@@ -26,6 +26,7 @@ COPY --from=builder /go/bin/aris-url-gen-api /app/aris-url-gen-api
 EXPOSE 8080
 
 # CMD ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8080"]
-
+# cp docker/dockerfile dockerfile
 # docker buildx build --platform linux/amd64 -t aris-url-gen-api:latest .
 # docker run -d -p 8170:8080 --env-file env/api.env --name aris-url-gen-api -t aris-url-gen-api:latest /app/aris-url-gen-api server start --host 0.0.0.0 --port 8080
+# rm dockerfile
