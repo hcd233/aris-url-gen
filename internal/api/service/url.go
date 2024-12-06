@@ -63,8 +63,10 @@ func (s *shortURLService) GenerateShortURL(request *dto.GenerateShortURLRequest)
 	// 先查询缓存
 	ctx := context.Background()
 
-	originalURL := util.ProcessURL(request.OriginalURL)
-
+	originalURL, err := util.ProcessURL(request.OriginalURL)
+	if err != nil {
+		return
+	}
 	shortURL, err := s.urlCacheDAO.GetURLByOriginal(ctx, originalURL)
 	if shortURL != "" && err == nil {
 		return &dto.GenerateShortURLResponse{

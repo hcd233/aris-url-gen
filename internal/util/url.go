@@ -1,3 +1,6 @@
+// Package util 提供URL处理相关的工具函数
+//
+//	@update 2024-12-07 01:02:11
 package util
 
 import (
@@ -49,11 +52,13 @@ func ConstructFullShortURL(domainName string, path string, randomCode string) (f
 //	@return processedURL string
 //	@author centonhuang
 //	@update 2024-12-05 16:16:56
-func ProcessURL(originalURL string) (processedURL string) {
+func ProcessURL(originalURL string) (processedURL string, err error) {
 	parsedURL, err := url.Parse(originalURL)
 	if err != nil {
 		return
 	}
-	processedURL = fmt.Sprintf("http://%s/%s", parsedURL.Host, parsedURL.Path)
+
+	parsedURL.Scheme = "https"
+	processedURL = parsedURL.String()
 	return
 }
