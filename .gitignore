@@ -1,3 +1,6 @@
 __debug*
+
 *.env
 *.log
+
+secrets.yml
