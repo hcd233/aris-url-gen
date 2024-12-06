@@ -12,7 +12,7 @@ services:
       interval: 5s
       retries: 10
     env_file:
-      - ./env/mysql.env
+      - ../env/mysql.env
 
 
   redis:
@@ -27,31 +27,29 @@ services:
       timeout: 5s
       retries: 3
     env_file:
-      - ./env/redis.env
+      - ../env/redis.env
 
   db-migrate:
-    image: aris-url-gen:latest
+    image: ghcr.io/hcd233/aris-url-gen:master
     container_name: db-migrate
     build:
       dockerfile: dockerfile
     restart: "no"
     env_file:
-      - ./env/api.env
+      - ../env/api.env
     depends_on:
       mysql:
         condition: service_healthy
     command: ["/app/aris-url-gen-api", "database", "migrate"]
 
   aris-url-gen-api:
-    image: aris-url-gen:latest
+    image: ghcr.io/hcd233/aris-url-gen:master
     container_name: aris-url-gen-api
-    build:
-      dockerfile: dockerfile
     restart: always
     ports:
-      - 8170:8170
+      - 8170:8080
     env_file:
-      - ./env/api.env
+      - ../env/api.env
     depends_on:
       mysql:
         condition: service_healthy
@@ -60,11 +58,11 @@ services:
       db-migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "-", "http://0.0.0.0:8170/health"]
+      test: ["CMD", "wget", "-q", "-O", "-", "http://0.0.0.0:8080/health"]
       interval: 5s
       timeout: 3s
       retries: 2
-    command: ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8170"]
+    command: ["/app/aris-url-gen-api", "server", "start", "--host", "0.0.0.0", "--port", "8080"]
 
 volumes:
   mysql-data:
@@ -77,4 +75,4 @@ volumes:
 
 # docker volume create mysql-data 
 # docker volume create redis-data
-# docker compose -f debug-docker-compose.yml up -d
+# docker compose -f docker/docker-compose.yml up -d

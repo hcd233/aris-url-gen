@@ -14,7 +14,7 @@ services:
       interval: 5s
       retries: 10
     env_file:
-      - ./env/mysql.env
+      - ../env/mysql.env
 
 
   redis:
@@ -31,7 +31,7 @@ services:
       timeout: 5s
       retries: 3
     env_file:
-      - ./env/redis.env
+      - ../env/redis.env
 
 
 volumes:
