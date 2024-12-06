@@ -4,3 +4,4 @@ __debug*
 *.log
 
 secrets.yml
+values.yaml
