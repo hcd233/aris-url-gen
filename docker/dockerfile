@@ -13,7 +13,7 @@ COPY internal ./internal
 COPY main.go ./main.go
 
 RUN go mod tidy
-RUN go build -mod=vendor -o /go/bin/aris-url-gen-api
+RUN go build -o /go/bin/aris-url-gen-api
 
 FROM alpine:latest
 
