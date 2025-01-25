@@ -49,6 +49,7 @@ var startServerCmd = &cobra.Command{
 			}),
 			fiberzap.New(fiberzap.Config{
 				Logger: logger.Logger,
+				Fields: []string{"latency", "status", "method", "url", "ip", "ua", "body", "resBody"},
 			}),
 		)
 
