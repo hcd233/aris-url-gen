@@ -1,6 +1,6 @@
 // Package dto 数据传输对象
 //
-//	@update 2024-12-06 19:57:57
+//	update 2024-12-06 19:57:57
 package dto
 
 import (
@@ -10,8 +10,8 @@ import (
 
 // Code 错误码
 //
-//	@author centonhuang
-//	@update 2024-12-06 19:57:39
+//	author centonhuang
+//	update 2024-12-06 19:57:39
 type Code int
 
 const (
@@ -40,11 +40,11 @@ var codeMessageMap = map[Code]string{
 
 // ToMessage 获取错误信息
 //
-//	@receiver c Code
-//	@param additionalMessage ...string
-//	@return string
-//	@author centonhuang
-//	@update 2024-12-05 16:08:28
+//	receiver c Code
+//	param additionalMessage ...string
+//	return string
+//	author centonhuang
+//	update 2024-12-05 16:08:28
 func (c Code) ToMessage(additionalMessage ...string) string {
 	message, ok := codeMessageMap[c]
 	if !ok {
@@ -60,8 +60,8 @@ func (c Code) ToMessage(additionalMessage ...string) string {
 
 // StandardResponse 标准响应
 //
-//	@author centonhuang
-//	@update 2024-12-05 16:08:35
+//	author centonhuang
+//	update 2024-12-05 16:08:35
 type StandardResponse struct {
 	Code    Code        `json:"code"`
 	Message string      `json:"message"`

@@ -1,0 +1,142 @@
+basePath: /
+definitions:
+  dto.Code:
+    enum:
+    - -1001
+    - -1002
+    - 0
+    - 1001
+    - 1002
+    - 1003
+    type: integer
+    x-enum-varnames:
+    - CodeUnauthorized
+    - CodeForbidden
+    - CodeOK
+    - CodeInvalidRequest
+    - CodeGenerateShortURLFailed
+    - CodeGetOriginalURLFailed
+  dto.GenerateShortURLRequest:
+    properties:
+      expireDays:
+        minimum: 1
+        type: integer
+      originalURL:
+        maxLength: 512
+        minLength: 5
+        type: string
+    required:
+    - originalURL
+    type: object
+  dto.GenerateShortURLResponse:
+    properties:
+      shortURL:
+        type: string
+    type: object
+  dto.StandardResponse:
+    properties:
+      code:
+        $ref: '#/definitions/dto.Code'
+      data: {}
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: lvlvko233@qq.com
+    name: centonhuang
+  description: 短链接生成服务API文档
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Aris URL Generator API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: 检查服务是否正常运行
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: 健康检查
+      tags:
+      - 系统
+  /v1/s/{shortURL}:
+    get:
+      consumes:
+      - application/json
+      description: 通过短URL获取原始URL并重定向
+      parameters:
+      - description: 短URL
+        in: path
+        name: shortURL
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "302":
+          description: 重定向到原始URL
+          schema:
+            type: string
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/dto.StandardResponse'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/dto.StandardResponse'
+      summary: 获取原始URL
+      tags:
+      - 短链接
+  /v1/shortURL:
+    post:
+      consumes:
+      - application/json
+      description: 将长URL转换为短URL
+      parameters:
+      - description: 生成短URL请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.GenerateShortURLRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.StandardResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.GenerateShortURLResponse'
+              type: object
+        "400":
+          description: 请求参数错误
+          schema:
+            $ref: '#/definitions/dto.StandardResponse'
+        "500":
+          description: 服务器内部错误
+          schema:
+            $ref: '#/definitions/dto.StandardResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: 生成短URL
+      tags:
+      - 短链接
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

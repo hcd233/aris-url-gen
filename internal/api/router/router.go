@@ -2,19 +2,27 @@ package router
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/swagger"
+	_ "github.com/hcd233/Aris-url-gen/docs"
 	"github.com/hcd233/Aris-url-gen/internal/api/handler"
 	auth "github.com/hcd233/Aris-url-gen/internal/api/middleware"
 	"github.com/hcd233/Aris-url-gen/internal/api/service"
+	"github.com/hcd233/Aris-url-gen/internal/config"
 )
 
 // RegisterRouter 注册路由
 //
-//	@param app *fiber.App
-//	@author centonhuang
-//	@update 2024-12-05 16:13:09
+//	param app *fiber.App
+//	author centonhuang
+//	update 2025-01-25 14:05:06
 func RegisterRouter(app *fiber.App) {
 	healthCheckHandler := handler.NewHealthCheckHandler()
 	shortURLHandler := handler.NewShortURLHandler(handler.WithShortURLService(service.NewShortURLService()))
+
+	if config.APIMode != config.ModeProd {
+		// swagger
+		app.Get("/swagger/*", swagger.HandlerDefault)
+	}
 
 	healthRouter := app.Group("/health")
 	healthRouter.Get("", healthCheckHandler.HealthCheck)

@@ -26,13 +26,13 @@ type urlCacheDAO struct {
 
 // GetURLByShort 获取短URL对应的原始URL
 //
-//	@receiver dao *urlCacheDAO
-//	@param ctx context.Context
-//	@param shortURL string
-//	@return string
-//	@return error
-//	@author centonhuang
-//	@update 2024-12-05 16:06:20
+//	receiver dao *urlCacheDAO
+//	param ctx context.Context
+//	param shortURL string
+//	return string
+//	return error
+//	author centonhuang
+//	update 2024-12-05 16:06:20
 func (dao *urlCacheDAO) GetURLByShort(ctx context.Context, shortURL string) (string, error) {
 	cacheKey := fmt.Sprintf(shortURLKey, shortURL)
 	return dao.rdb.Get(ctx, cacheKey).Result()
@@ -40,13 +40,13 @@ func (dao *urlCacheDAO) GetURLByShort(ctx context.Context, shortURL string) (str
 
 // GetURLByOriginal 获取原始URL对应的短URL
 //
-//	@receiver dao *urlCacheDAO
-//	@param ctx context.Context
-//	@param originalURL string
-//	@return string
-//	@return error
-//	@author centonhuang
-//	@update 2024-12-05 16:06:28
+//	receiver dao *urlCacheDAO
+//	param ctx context.Context
+//	param originalURL string
+//	return string
+//	return error
+//	author centonhuang
+//	update 2024-12-05 16:06:28
 func (dao *urlCacheDAO) GetURLByOriginal(ctx context.Context, originalURL string) (string, error) {
 	cacheKey := fmt.Sprintf(originalURLKey, originalURL)
 	return dao.rdb.Get(ctx, cacheKey).Result()
@@ -54,14 +54,14 @@ func (dao *urlCacheDAO) GetURLByOriginal(ctx context.Context, originalURL string
 
 // SetBidirectionalCache 设置双向缓存
 //
-//	@receiver dao *urlCacheDAO
-//	@param ctx context.Context
-//	@param shortURL string
-//	@param originalURL string
-//	@param expiration time.Duration
-//	@return error
-//	@author centonhuang
-//	@update 2024-12-05 16:06:36
+//	receiver dao *urlCacheDAO
+//	param ctx context.Context
+//	param shortURL string
+//	param originalURL string
+//	param expiration time.Duration
+//	return error
+//	author centonhuang
+//	update 2024-12-05 16:06:36
 func (dao *urlCacheDAO) SetBidirectionalCache(ctx context.Context, shortURL, originalURL string, expiration time.Duration) error {
 	pipe := dao.rdb.Pipeline()
 
@@ -79,13 +79,13 @@ func (dao *urlCacheDAO) SetBidirectionalCache(ctx context.Context, shortURL, ori
 
 // SetNilCacheByShortURL 设置短URL为空缓存
 //
-//	@receiver dao *urlCacheDAO
-//	@param ctx context.Context
-//	@param shortURL string
-//	@param expiration time.Duration
-//	@return error
-//	@author centonhuang
-//	@update 2024-12-05 16:06:42
+//	receiver dao *urlCacheDAO
+//	param ctx context.Context
+//	param shortURL string
+//	param expiration time.Duration
+//	return error
+//	author centonhuang
+//	update 2024-12-05 16:06:42
 func (dao *urlCacheDAO) SetNilCacheByShortURL(ctx context.Context, shortURL string, expiration time.Duration) error {
 	cacheKey := fmt.Sprintf(shortURLKey, shortURL)
 	return dao.rdb.Set(ctx, cacheKey, "nil", expiration).Err()

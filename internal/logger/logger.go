@@ -13,7 +13,7 @@ import (
 
 // Logger undefined 全局日志
 //
-//	@update 2024-12-04 10:00:00
+//	update 2024-12-04 10:00:00
 var Logger *zap.Logger
 
 func init() {

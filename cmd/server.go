@@ -27,7 +27,7 @@ var startServerCmd = &cobra.Command{
 	Use:   "start",
 	Short: "启动API服务器",
 	Long:  `启动并运行API服务器并监听指定的主机和端口`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 		host, port := lo.Must1(cmd.Flags().GetString("host")), lo.Must1(cmd.Flags().GetString("port"))
 
 		database.InitDatabase()
@@ -39,7 +39,7 @@ var startServerCmd = &cobra.Command{
 			ReadTimeout:       config.ReadTimeout,
 			WriteTimeout:      config.WriteTimeout,
 			Concurrency:       config.Concurrency,
-			EnablePrintRoutes: config.APIMode == config.ModeDev,
+			EnablePrintRoutes: config.APIMode != config.ModeProd,
 		})
 
 		app.Use(

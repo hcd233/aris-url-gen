@@ -1,6 +1,6 @@
 // Package cmd 命令行工具
 //
-//	@update 2024-08-11 01:57:31
+//	update 2024-08-11 01:57:31
 package cmd
 
 import (
@@ -20,8 +20,8 @@ var rootCmd = &cobra.Command{
 
 // Execute 执行命令行
 //
-//	@author centonhuang
-//	@update 2024-12-05 16:05:32
+//	author centonhuang
+//	update 2024-12-05 16:05:32
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {

@@ -1,6 +1,6 @@
 // Package auth 认证中间件
 //
-//	@update 2024-12-06 20:00:42
+//	update 2024-12-06 20:00:42
 package auth
 
 import (
@@ -13,9 +13,9 @@ import (
 
 // New 认证中间件
 //
-//	@return fiber.Handler
-//	@author centonhuang
-//	@update 2024-12-06 20:00:42
+//	return fiber.Handler
+//	author centonhuang
+//	update 2024-12-06 20:00:42
 func New() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		authKey := c.Get("Authorization")

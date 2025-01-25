@@ -1,6 +1,6 @@
 // Package model defines the database schema for the model.
 //
-//	@update 2024-06-22 09:33:43
+//	update 2024-06-22 09:33:43
 package model
 
 import (
@@ -11,8 +11,8 @@ import (
 
 // URL URL数据库模型
 //
-//	@author centonhuang
-//	@update 2024-12-05 16:16:18
+//	author centonhuang
+//	update 2024-12-05 16:16:18
 type URL struct {
 	gorm.Model
 	ID          uint         `json:"id" gorm:"column:id;primary_key;auto_increment;comment:URL ID"`
